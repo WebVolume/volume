@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -Dserver.port=$PORT -jar target/*.war
+web: java $JAVA_OPTS -cp target/classes:target/dependency/https://ancient-shore-23379.herokuapp.com/
