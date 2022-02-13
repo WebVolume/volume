@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/volume?serverTimezone=Asia/Seoul
-    username: volume_tester
-    password: volumetester
+    url: ${{ secrets.DBurl}}
+    username: ${{ secrets.DBusername }}
+    password: ${{ secrets.DBpassword }}
   jpa:
     hibernate:
       ddl-auto: create
