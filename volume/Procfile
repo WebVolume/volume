@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -cp target/classes:target/dependency/https://ancient-shore-23379.herokuapp.com/
+web: java $JAVA_OPTS -cp target/classes:target/dependency/ancient-shore-23379.herokuapp.com
