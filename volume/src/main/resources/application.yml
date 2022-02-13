@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${{ secrets.DBurl}}
-    username: ${{ secrets.DBusername }}
-    password: ${{ secrets.DBpassword }}
+    url: ${{ secrets.DBURL}}
+    username: ${{ secrets.DBUSERNAME }}
+    password: ${{ secrets.DBPASSWORD }}
   jpa:
     hibernate:
       ddl-auto: create
