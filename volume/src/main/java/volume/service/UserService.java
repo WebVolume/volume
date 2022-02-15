@@ -1,8 +1,10 @@
 package volume.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import volume.configuration.SecurityConfig;
 import volume.entity.User;
 import volume.repository.UserRepository;
 
@@ -15,6 +17,7 @@ import java.util.Objects;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final SecurityConfig securityConfig;
 
     @Transactional
     public String signUp(User user){
@@ -35,12 +38,14 @@ public class UserService {
     public User findOne(String id){return userRepository.findOne(id);}
 
     public String login(User user){
+        PasswordEncoder passwordEncoder = securityConfig.getPasswordEncoder();
+
         User findUser = userRepository.findOne(user.getId());
         if (findUser == null){
             throw new IllegalStateException("해당하는 아이디는 존재하지 않습니다.");
         }
-        System.out.println(Objects.equals(user.getPassword(),findUser.getPassword()));
-        if (!Objects.equals(user.getPassword(),findUser.getPassword())){
+
+        if (!passwordEncoder.matches(user.getPassword(),findUser.getPassword())){
             throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
         }
         return user.getId();

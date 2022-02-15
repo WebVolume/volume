@@ -1,4 +1,4 @@
-package volume;
+package volume.exception;
 
 public class NoExectFollow extends RuntimeException{
     public NoExectFollow(){

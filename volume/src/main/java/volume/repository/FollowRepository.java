@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import volume.entity.Follow;
 import volume.entity.User;
-import volume.NoExectFollow;
+import volume.exception.NoExectFollow;
 
 import javax.persistence.EntityManager;
 import java.util.List;
