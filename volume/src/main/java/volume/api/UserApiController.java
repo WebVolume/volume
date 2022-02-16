@@ -32,6 +32,7 @@ public class UserApiController {
         user.setUserName(request.getUserName());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setEmail(request.getEmail());
+        System.out.println("Encoded Password : " + user.getPassword());
 
         String id = userService.signUp(user);
 
@@ -39,7 +40,7 @@ public class UserApiController {
 
     }
 
-    @GetMapping("/api/login")
+    @PostMapping("/api/login")
     public CreateUserResponse loginUser(@RequestBody @Valid CreateUserRequest request){
         User user = new User();
         user.setId(request.getId());
