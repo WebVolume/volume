@@ -1,6 +1,7 @@
 package volume.repository;
 
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.stereotype.Repository;
 import volume.entity.User;
 
@@ -18,11 +19,11 @@ public class UserRepository {
     }
 
     public User findOne(String id){
-        return em.find(User.class, id);
+        User findUser = em.find(User.class, id);
+        return findUser;
     }
 
     public List<User> findAll(){
         return em.createQuery("select u from User u", User.class).getResultList();
     }
-
 }

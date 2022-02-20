@@ -4,17 +4,25 @@ package volume.api;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import volume.configuration.SecurityConfig;
 import volume.entity.User;
 import volume.service.UserService;
 
 import javax.validation.Valid;
+import java.io.File;
+import java.net.FileNameMap;
+import java.net.URLConnection;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,11 +35,7 @@ public class UserApiController {
     public CreateUserResponse saveUser(@RequestBody @Valid CreateUserRequest request){
         PasswordEncoder passwordEncoder = securityConfig.getPasswordEncoder();
 
-        User user = new User();
-        user.setId(request.getId());
-        user.setUserName(request.getUserName());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setEmail(request.getEmail());
+        User user = request.getUser();
         System.out.println("Encoded Password : " + user.getPassword());
 
         String id = userService.signUp(user);
@@ -42,12 +46,28 @@ public class UserApiController {
 
     @PostMapping("/api/login")
     public CreateUserResponse loginUser(@RequestBody @Valid CreateUserRequest request){
-        User user = new User();
-        user.setId(request.getId());
-        user.setPassword(request.getPassword());
+        User user = request.getUser();
         String id = userService.login(user);
 
         return new CreateUserResponse(id);
+    }
+
+    @PostMapping("/api/uploadProfilePic")
+    public CreateUserResponse uploadProfilePic(CreateUserRequest request){
+        User user = request.getUser();
+        userService.saveProfilePics(user,request.getProfilePic());
+
+        return new CreateUserResponse(user.getId());
+    }
+
+    @GetMapping("/api/getProfilePic")
+    public ResponseEntity<Resource> getProfilePic(@RequestBody @Valid CreateUserRequest request){
+        User user = request.getUser();
+        Resource file = userService.getProfilePics(user);
+        FileNameMap fileNameMap = URLConnection.getFileNameMap();
+        String contentType = fileNameMap.getContentTypeFor(file.getFilename());
+
+        return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType)).header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename=\""+file.getFilename()+"\"").body(file);
     }
 
     @Data
@@ -56,6 +76,17 @@ public class UserApiController {
         private String userName;
         private String password;
         private String email;
+        private MultipartFile profilePic;
+
+        public User getUser(){
+            User user = new User();
+            user.setId(getId());
+            user.setUserName(getUserName());
+            user.setPassword(getPassword());
+            user.setEmail(getEmail());
+
+            return user;
+        }
     }
 
     @Data

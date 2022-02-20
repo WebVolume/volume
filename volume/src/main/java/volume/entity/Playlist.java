@@ -21,9 +21,7 @@ public class Playlist {
 
     private String playlistName;
 
-    @Type(type = "json")
-    @Column(name = "order_Groups", columnDefinition = "json")
-    private List<Integer> orderGroups = new ArrayList<>();
+    private String orderGroups;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

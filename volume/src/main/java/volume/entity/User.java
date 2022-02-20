@@ -2,12 +2,14 @@ package volume.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 
 
 @Entity
 @Getter @Setter
+@DynamicUpdate
 public class User{
 
     @Id

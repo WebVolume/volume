@@ -11,3 +11,6 @@ spring:
       hibernate:
         #        show_sql: true
         format_sql: true
+  servlet:
+    multipart:
+      location: C://Users/tiger/OneDrive/문서/volume/volume/Users
