@@ -70,6 +70,24 @@ public class UserApiController {
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType)).header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename=\""+file.getFilename()+"\"").body(file);
     }
 
+    @PostMapping("/api/uploadBackgroundPics")
+    public CreateUserResponse uploadBackgroundPics(CreateUserRequest request){
+        User user = request.getUser();
+        userService.saveBackgroundPics(user,request.getBackgroundPics());
+
+        return new CreateUserResponse(user.getId());
+    }
+
+    @GetMapping("/api/getBackgroundPics")
+    public ResponseEntity<Resource> getBackgroundPics(@RequestBody @Valid CreateUserRequest request){
+        User user = request.getUser();
+        Resource file = userService.getBackgroundPics(user);
+        FileNameMap fileNameMap = URLConnection.getFileNameMap();
+        String contentType = fileNameMap.getContentTypeFor(file.getFilename());
+
+        return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType)).header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename=\""+file.getFilename()+"\"").body(file);
+    }
+
     @Data
     static class CreateUserRequest{
         private String id;
@@ -77,6 +95,7 @@ public class UserApiController {
         private String password;
         private String email;
         private MultipartFile profilePic;
+        private MultipartFile backgroundPics;
 
         public User getUser(){
             User user = new User();

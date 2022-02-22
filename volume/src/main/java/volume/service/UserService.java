@@ -70,4 +70,19 @@ public class UserService {
         return fileService.loadAsResource(findUser.getProfilePics());
     }
 
+    @Transactional()
+    public void saveBackgroundPics(User user,MultipartFile file){
+        String[] originalName = file.getOriginalFilename().split("\\.");
+        User findUser = userRepository.findOne(user.getId());
+        String fileName = user.getId()+"_BackgroundPics." + originalName[originalName.length-1];
+        String profile = fileService.store(file,fileName);
+        findUser.setBackgroundPics(profile);
+        userRepository.save(findUser);
+    }
+
+    public Resource getBackgroundPics(User user){
+        User findUser = userRepository.findOne(user.getId());
+        return fileService.loadAsResource(findUser.getBackgroundPics());
+    }
+
 }
