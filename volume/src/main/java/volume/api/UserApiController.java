@@ -41,7 +41,6 @@ public class UserApiController {
         String id = userService.signUp(user);
 
         return new CreateUserResponse(id);
-
     }
 
     @PostMapping("/api/login")
@@ -103,7 +102,6 @@ public class UserApiController {
             user.setUserName(getUserName());
             user.setPassword(getPassword());
             user.setEmail(getEmail());
-
             return user;
         }
     }
@@ -115,11 +113,5 @@ public class UserApiController {
         public CreateUserResponse(String id){
             this.id = id;
         }
-    }
-
-    @Data
-    @AllArgsConstructor
-    static class MemberDto {
-        private String name;
     }
 }

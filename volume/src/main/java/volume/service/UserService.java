@@ -22,6 +22,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final SecurityConfig securityConfig;
     private final FileService fileService;
+    private final String profileFolder = "Users/ProfilePic";
+    private final String backgroundFolder = "Users/BackgroundPic";
 
     @Transactional
     public String signUp(User user){
@@ -31,7 +33,7 @@ public class UserService {
     }
 
     private void validateDuplicateUser(User user){
-        User findUser = userRepository.findOne(user.getId());
+        User findUser = findOne(user.getId());
         if (findUser != null){
             throw new IllegalStateException("이미 존재하는 아이디입니다.");
         }
@@ -60,14 +62,14 @@ public class UserService {
         String[] originalName = file.getOriginalFilename().split("\\.");
         User findUser = userRepository.findOne(user.getId());
         String fileName = user.getId()+"_ProfilePics." + originalName[originalName.length-1];
-        String profile = fileService.store(file,fileName);
+        String profile = fileService.store(file,fileName,profileFolder);
         findUser.setProfilePics(profile);
         userRepository.save(findUser);
     }
 
     public Resource getProfilePics(User user){
         User findUser = userRepository.findOne(user.getId());
-        return fileService.loadAsResource(findUser.getProfilePics());
+        return fileService.loadAsResource(findUser.getProfilePics(),profileFolder);
     }
 
     @Transactional()
@@ -75,14 +77,14 @@ public class UserService {
         String[] originalName = file.getOriginalFilename().split("\\.");
         User findUser = userRepository.findOne(user.getId());
         String fileName = user.getId()+"_BackgroundPics." + originalName[originalName.length-1];
-        String profile = fileService.store(file,fileName);
+        String profile = fileService.store(file,fileName,backgroundFolder);
         findUser.setBackgroundPics(profile);
         userRepository.save(findUser);
     }
 
     public Resource getBackgroundPics(User user){
         User findUser = userRepository.findOne(user.getId());
-        return fileService.loadAsResource(findUser.getBackgroundPics());
+        return fileService.loadAsResource(findUser.getBackgroundPics(),backgroundFolder);
     }
 
 }

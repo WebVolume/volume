@@ -23,22 +23,22 @@ public class FileService {
     @Value("${spring.servlet.multipart.location}") //application.yml에 저장한 루트 가져오기
     private String uploadPath;
 
-    public void init(){
+    public void init(String folder){
         try{
-            Files.createDirectories(Paths.get(uploadPath));
+            Files.createDirectories(Paths.get(uploadPath+"/"+folder));
         }catch (IOException e){
             throw new RuntimeException("Could not create upload folder!");
         }
     }
 
-    public String store(MultipartFile file, String fileName){
+    public String store(MultipartFile file, String fileName, String folder){
         try{
             if (file.isEmpty()){
                 throw new RuntimeException("File is Empty");
             }
-            Path root = Paths.get(uploadPath);
+            Path root = Paths.get(uploadPath+"/"+folder);
             if(!Files.exists(root)){ //폴더가 존재하지 않으면 새로 만든다.
-                init();
+                init(folder);
             }
 
             InputStream inputStream = file.getInputStream();
@@ -50,13 +50,13 @@ public class FileService {
         return fileName;
     }
 
-    public Path load(String filename){
-        return Paths.get(uploadPath).resolve(filename);
+    public Path load(String filename, String folder){
+        return Paths.get(uploadPath+"/"+folder).resolve(filename);
     }
 
-    public Resource loadAsResource(String filename){
+    public Resource loadAsResource(String filename, String folder){
         try{
-            Path file = load(filename);
+            Path file = load(filename,folder);
             Resource resource = new UrlResource(file.toUri());
             if(resource.exists() || resource.isReadable()){
                 //왜 둘 중에 하나를 다 체크하지?

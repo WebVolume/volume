@@ -1,9 +1,16 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/volume?serverTimezone=Asia/Seoul
-    username: volume_tester
-    password: volumetester
+    url: jdbc:mysql://us-cdbr-east-05.cleardb.net/heroku_50ff770d2df4ca8?reconnect=true
+    username: bc71f1363a50e3
+    password: f6f3112e
+    hikari:
+      maximum-pool-size: 6
+
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/volume?serverTimezone=Asia/Seoul
+#    username: volume_tester
+#    password: volumetester
   jpa:
     hibernate:
       ddl-auto: create
@@ -13,4 +20,4 @@ spring:
         format_sql: true
   servlet:
     multipart:
-      location: C://Users/tiger/OneDrive/문서/volume/volume/Users
+      location: ${user.dir}
