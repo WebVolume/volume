@@ -10,11 +10,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import volume.DTO.UpdateUserDTO;
 import volume.configuration.SecurityConfig;
 import volume.entity.User;
 import volume.service.UserService;
@@ -86,6 +84,13 @@ public class UserApiController {
 
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType)).header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename=\""+file.getFilename()+"\"").body(file);
     }
+
+    @PatchMapping("/api/updateUser")
+    public CreateUserResponse updateUser(@RequestBody @Valid UpdateUserDTO request){
+        String userId = userService.updateUser(request);
+        return new CreateUserResponse(userId);
+    }
+
 
     @Data
     static class CreateUserRequest{
