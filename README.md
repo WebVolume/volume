@@ -16,6 +16,10 @@ https://volume-server-api.herokuapp.com
 
 [7. 회원 정보 수정](#회원-정보-수정)
 
+***
+***
+</br>
+
 # 회원 가입
 
 * **URL** : "/api/signup"
@@ -34,6 +38,10 @@ https://volume-server-api.herokuapp.com
 ```javascript
 {   "id" : "testerid"}
 ```
+</br>
+
+***
+</br>
 
 # 로그인
 
@@ -52,6 +60,10 @@ https://volume-server-api.herokuapp.com
 {   "id" : "testerid"}
 ```
 
+</br>
+
+***
+</br>
 
 # 프로필 사진 업로드
 
@@ -69,6 +81,10 @@ https://volume-server-api.herokuapp.com
 ```javascript
 {   "id" : "testerid"}
 ```
+</br>
+
+***
+</br>
 
 # 프로필 사진 다운로드
 
@@ -84,7 +100,10 @@ https://volume-server-api.herokuapp.com
 ### Response
 파일
 
+</br>
 
+***
+</br>
 
 # 배경 사진 업로드
 
@@ -103,6 +122,11 @@ https://volume-server-api.herokuapp.com
 {   "id" : "testerid"}
 ```
 
+</br>
+
+***
+</br>
+
 # 배경 사진 다운로드
 
 * **URL** : "/api/getBackgroundPics"
@@ -117,6 +141,11 @@ https://volume-server-api.herokuapp.com
 ### Response
 파일
 
+</br>
+
+***
+
+</br>
 
 # 회원 정보 수정
 
@@ -141,3 +170,5 @@ https://volume-server-api.herokuapp.com
 ```javascript
 {   "id" : "testerid"}
 ```
+
+</br>
