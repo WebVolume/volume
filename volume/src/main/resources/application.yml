@@ -21,3 +21,5 @@ spring:
   servlet:
     multipart:
       location: ${user.dir}
+server:
+  port: ${PORT}
