@@ -8,7 +8,7 @@ spring:
      maximum-pool-size: 6
 
 #     driver-class-name: com.mysql.cj.jdbc.Driver
-#     url: jdbc:mysql://localhost:3306/volume?serverTimezone=Asia/Seoul
+#     url: jdbc:mysql://localhost:3306/volumetest?serverTimezone=Asia/Seoul
 #     username: volume_tester
 #     password: volumetester
   jpa:
