@@ -2,8 +2,6 @@ package volume.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import volume.entity.Album;
-import volume.entity.Artist;
 import volume.entity.Music;
 
 import javax.persistence.EntityManager;
@@ -29,13 +27,5 @@ public class MusicRepository {
 
     public List<Music> findByTitle(String title){
         return em.createQuery("select m from Music m where m.title = :title", Music.class).setParameter("title",title).getResultList();
-    }
-
-    public List<Music> findByArtist(Artist artist){
-        return em.createQuery("select m from Music m where m.artist = :artist", Music.class).setParameter("artist", artist).getResultList();
-    }
-
-    public List<Music> findByAlbum(Album album){
-        return em.createQuery("select m from Music m where m.album = :album", Music.class).setParameter("album",album).getResultList();
     }
 }

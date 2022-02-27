@@ -1,14 +1,12 @@
-package volume.api;
+package volume.controller.api;
 
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,7 +16,6 @@ import volume.entity.User;
 import volume.service.UserService;
 
 import javax.validation.Valid;
-import java.io.File;
 import java.net.FileNameMap;
 import java.net.URLConnection;
 
@@ -109,6 +106,12 @@ public class UserApiController {
             user.setEmail(getEmail());
             return user;
         }
+    }
+
+    @Data
+    static class MusicRequest{
+        private String id; //userId
+        private MultipartFile musicFile;
     }
 
     @Data

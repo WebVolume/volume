@@ -17,14 +17,11 @@ public class Music{
     private String musicFilePath;
     private Long musicLength;
     private Long likeCount;
+    private Long playCount;
 
     //ManyToOne 쓰면 안된다고 했던거같은데.... 확인하기
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "artist_id")
-    private Artist artist;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "album_id")
-    private Album album;
+    @JoinColumn(name = "user_id")
+    private User user;
 
 }

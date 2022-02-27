@@ -1,16 +1,23 @@
 spring:
   datasource:
-   driver-class-name: com.mysql.cj.jdbc.Driver
-   url: ${{ secrets.DBURL }}
-   username: ${{ secrets.DBUSERNAME }}
-   password: ${{ secrets.DBPASSWORD }}
-   hikari:
-     maximum-pool-size: 6
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: ${{ secrets.DBURL }}
+#    username: ${{ secrets.DBUSERNAME }}
+#    password: ${{ secrets.DBPASSWORD }}
+#    hikari:
+#      maximum-pool-size: 6
 
-#     driver-class-name: com.mysql.cj.jdbc.Driver
-#     url: jdbc:mysql://localhost:3306/volume?serverTimezone=Asia/Seoul
-#     username: volume_tester
-#     password: volumetester
+  #유진
+  #     driver-class-name: com.mysql.cj.jdbc.Driver
+  #     url: jdbc:mysql://localhost:3306/volumetest?serverTimezone=Asia/Seoul
+  #     username: volume_tester
+  #     password: volumetester
+
+  #지영 로컬
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/volume?serverTimezone=Asia/Seoul
+    username: volume_tester
+    password: volumetester
   jpa:
     hibernate:
       ddl-auto: create
