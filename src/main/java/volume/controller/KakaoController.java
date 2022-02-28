@@ -1,11 +1,10 @@
 package volume.controller;
 
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
+import volume.DTO.KakaoUserDTO;
 import volume.service.KakaoService;
 
 @RestController
@@ -18,15 +17,7 @@ public class KakaoController {
     @GetMapping("/oauth/kakao")
     public KakaoUserDTO kakaoLogin(@RequestParam String code) throws Exception{
         String access_Token = kakaoService.getKakaoAccessToken(code);
-        String userId = kakaoService.createKakaoUser(access_Token);
-        return new KakaoUserDTO(userId);
-    }
-
-    @Data
-    static class KakaoUserDTO{
-        private String id; //userId
-
-        public KakaoUserDTO(String id){ this.id = id;};
+        return kakaoService.createKakaoUser(access_Token);
     }
 
 }

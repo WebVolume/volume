@@ -22,4 +22,5 @@ public class User{
     private String profilePics; //String말고 파일 경로 나타내는 좋은 방법 있는지 보기
     private String backgroundPics;
     private int age;
+    private boolean kakao = false;
 }

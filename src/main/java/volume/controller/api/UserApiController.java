@@ -2,6 +2,7 @@ package volume.controller.api;
 
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -95,6 +96,7 @@ public class UserApiController {
         private String userName;
         private String password;
         private String email;
+        private boolean kakao = false;
         private MultipartFile profilePic;
         private MultipartFile backgroundPics;
 
@@ -104,6 +106,7 @@ public class UserApiController {
             user.setUserName(getUserName());
             user.setPassword(getPassword());
             user.setEmail(getEmail());
+            user.setKakao(isKakao());
             return user;
         }
     }

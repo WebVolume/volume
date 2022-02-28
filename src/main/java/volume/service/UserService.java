@@ -29,7 +29,9 @@ public class UserService {
     @Transactional
     public String signUp(User user){
         validateDuplicateUser(user);
-        setPassword(user,user.getPassword());
+        if (!user.isKakao()) {
+            setPassword(user, user.getPassword());
+        }
         userRepository.save(user);
         return user.getId();
     }
@@ -56,7 +58,7 @@ public class UserService {
             throw new IllegalStateException("해당하는 아이디는 존재하지 않습니다.");
         }
 
-        if (!checkPassword(findUser,user.getPassword())){
+        if (!findUser.isKakao() && !checkPassword(findUser,user.getPassword())){
             throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
         }
         return user.getId();

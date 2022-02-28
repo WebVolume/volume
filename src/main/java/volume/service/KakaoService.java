@@ -6,6 +6,8 @@ import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import volume.DTO.KakaoUserDTO;
 import volume.entity.User;
 import volume.repository.UserRepository;
 
@@ -16,8 +18,8 @@ import java.net.URL;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class KakaoService{
-    private final String redirectURL = "http://localhost:8080/oauth/kakao";
-    //private String redirectURL = "https://volume-server-api.herokuapp.com/oauth/kakao";
+    //private final String redirectURL = "http://localhost:8080/oauth/kakao";
+    private String redirectURL = "https://volume-server-api.herokuapp.com/oauth/kakao";
 
     private final UserRepository userRepository;
     private final UserService userService;
@@ -77,8 +79,9 @@ public class KakaoService{
         return access_Token;
     }
 
-    public String createKakaoUser(String token) throws Exception{
+    public KakaoUserDTO createKakaoUser(String token) throws Exception{
         String reqURL = "https://kapi.kakao.com/v2/user/me";
+        KakaoUserDTO kakaoUserDTO = new KakaoUserDTO();
 
         //access_token을 이용하여 사용자 정보 조회
         try {
@@ -110,43 +113,36 @@ public class KakaoService{
 
             User findUser = userRepository.findOne(id);
             if (findUser != null){
-                userService.login(findUser);
+                String userId = userService.login(findUser);
+                kakaoUserDTO.setId(userId);
+                kakaoUserDTO.setLogin(true);
             }
             else {
-                User newUser = new User();
-                newUser.setId(id);
+                kakaoUserDTO.setId(id);
 
                 boolean hasEmail = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_email").getAsBoolean();
                 if (hasEmail) {
                     String email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
-                    newUser.setEmail(email);
+                    kakaoUserDTO.setEmail(email);
                 }
 
-                JsonObject profile = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("profile").getAsJsonObject();
-                String nickname = profile.get("nickname").getAsString();
+                boolean hasAge = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_age_range").getAsBoolean();
+                if(hasAge){
+                    String age_range = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("age_range").getAsString();
+                    int age = Integer.parseInt(age_range.replaceAll("\"","").split("~")[0]);
+                    kakaoUserDTO.setAge(age);
+                }
+
+                String nickname = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("profile").getAsJsonObject().get("nickname").getAsString();
                 if (nickname != null){
-                    newUser.setUserName(nickname);
+                    kakaoUserDTO.setUserName(nickname);
                 }
-
-//                String profile_url = profile.get("profile_image_url").getAsString();
-//                if (profile_url != null){
-//                    try{
-//                        URL profURL = new URL(profile_url);
-//                        File profPic = new File(profURL.getFile());
-//                        String name = profPic.getName();
-//                        MultipartFile profilePic = new MockMultipartFile(profPic.getName(), profPic.toString().getBytes(StandardCharsets.UTF_8));
-//                        userService.saveProfilePics(newUser,profilePic);
-//                    }catch (Exception e){
-//                        e.printStackTrace();
-//                    }
-//                }
-                return userService.signUp(newUser);
             }
             br.close();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return kakaoUserDTO;
     }
 }
