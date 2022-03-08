@@ -28,3 +28,5 @@ spring:
   servlet:
     multipart:
       location: ${user.dir}
+      maxFileSize: 10MB
+      maxRequestSize: 10MB
