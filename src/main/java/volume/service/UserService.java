@@ -106,6 +106,7 @@ public class UserService {
 
     @Transactional()
     public void saveProfilePics(User user, MultipartFile file){
+        if (file.getSize() > )
         String[] originalName = file.getOriginalFilename().split("\\.");
         User findUser = userRepository.findOne(user.getId());
         String fileName = user.getId()+"_ProfilePics." + originalName[originalName.length-1];
