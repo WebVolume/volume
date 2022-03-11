@@ -2,7 +2,6 @@ package volume.controller.api;
 
 
 import lombok.Data;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -11,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import volume.Request.CheckUserDuplicationRequest;
+import volume.Response.CreateCheckDuplicationResponse;
 import volume.DTO.UpdateUserDTO;
 import volume.configuration.SecurityConfig;
 import volume.entity.User;
@@ -40,29 +41,8 @@ public class UserApiController {
     }
 
     @GetMapping("/api/signup/checkDuplication")
-    public CreateCheckIdResponse checkUserId(@RequestBody CheckUserIdRequest request){
-        if (request.getId() != null) {
-            String userId = request.getId();
-            User findUser = userService.findOne(userId);
-
-            if (findUser == null) {
-                return new CreateCheckIdResponse(false, userId);
-            } else {
-                return new CreateCheckIdResponse(true, userId);
-            }
-        }else if (request.getEmail() != null){
-            String email = request.getEmail();
-            User findUser = userService.findOneWithEmail(email);
-
-            if (findUser == null){
-                return new CreateCheckIdResponse(false, null);
-            } else {
-                return new CreateCheckIdResponse(true, findUser.getId());
-            }
-        }else{
-            //에러추가해야함!!
-            return null;
-        }
+    public CreateCheckDuplicationResponse checkDuplication(@RequestBody CheckUserDuplicationRequest request){
+        return userService.checkDuplication(request);
     }
 
     @PostMapping("/api/login")
@@ -150,22 +130,5 @@ public class UserApiController {
         public CreateUserResponse(String id){
             this.id = id;
         }
-    }
-
-    @Data
-    static class CreateCheckIdResponse {
-        private Boolean exist;
-        public String id;
-
-        public CreateCheckIdResponse(Boolean exist, String id){
-            this.exist = exist;
-            this.id = id;
-        }
-    }
-
-    @Data
-    static class CheckUserIdRequest {
-        private String id;
-        private String email;
     }
 }

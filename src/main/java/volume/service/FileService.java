@@ -1,6 +1,7 @@
 package volume.service;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import org.springframework.core.io.Resource;
+import volume.exception.ErrorCode;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -44,8 +47,8 @@ public class FileService {
             InputStream inputStream = file.getInputStream();
             //copy(소스파일, 목적지)
             Files.copy(inputStream,root.resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
-        }catch (Exception e){
-            e.printStackTrace();
+        }catch(Exception e){
+
         }
         return fileName;
     }

@@ -1,5 +1,8 @@
 package volume.exception;
 
+import lombok.Getter;
+
+@Getter
 public class UserNotExist extends RuntimeException{
     private ErrorCode errorCode;
 

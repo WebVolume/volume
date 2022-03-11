@@ -29,6 +29,11 @@ public class UserRepository {
     }
 
     public User findOneWithEmail(String email) throws UserNotExist{
-        return (User) em.createQuery("select u From User u where u.email = :email").setParameter("email",email).getSingleResult();
+        List<User> findUsers = em.createQuery("select u From User u where u.email = :email").setParameter("email",email).getResultList();
+        if (findUsers.isEmpty()){
+            return null;
+        }else{
+            return findUsers.get(0);
+        }
     }
 }

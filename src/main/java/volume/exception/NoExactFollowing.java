@@ -1,5 +1,8 @@
 package volume.exception;
 
+import lombok.Getter;
+
+@Getter
 public class NoExactFollowing extends RuntimeException{
     private ErrorCode errorCode;
 

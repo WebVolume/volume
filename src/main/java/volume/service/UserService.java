@@ -1,23 +1,23 @@
 package volume.service;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import volume.Request.CheckUserDuplicationRequest;
+import volume.Response.CreateCheckDuplicationResponse;
 import volume.DTO.UpdateUserDTO;
+import volume.Response.Type;
 import volume.configuration.SecurityConfig;
 import volume.entity.User;
-import volume.exception.DuplicateUserIdException;
-import volume.exception.ErrorCode;
-import volume.exception.PasswordNotExact;
-import volume.exception.UserNotExist;
+import volume.exception.*;
 import volume.repository.UserRepository;
 
-import java.io.File;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @Transactional(readOnly = true)
@@ -29,6 +29,9 @@ public class UserService {
     private final FileService fileService;
     private final String profileFolder = "Users/ProfilePic";
     private final String backgroundFolder = "Users/BackgroundPic";
+
+    @Value("${spring.servlet.multipart.maxFileSize}")
+    private String maxFileSize;
 
     @Transactional
     public String signUp(User user){
@@ -50,6 +53,28 @@ public class UserService {
     public void setPassword(User user, String password){
         PasswordEncoder passwordEncoder = securityConfig.getPasswordEncoder();
         user.setPassword(passwordEncoder.encode(password));
+    }
+
+    public CreateCheckDuplicationResponse checkDuplication(CheckUserDuplicationRequest request) {
+        if (request.getId() != null) {
+            String userId = request.getId();
+            User findUser = findOne(userId);
+
+            if (findUser == null) {
+                return new CreateCheckDuplicationResponse(false, Type.ID, userId);
+            } else {
+                return new CreateCheckDuplicationResponse(true, Type.ID, userId);
+            }
+        }else {
+            String email = request.getEmail();
+            User findUser = findOneWithEmail(email);
+
+            if (findUser == null) {
+                return new CreateCheckDuplicationResponse(false, Type.EMAIL, request.getEmail());
+            } else {
+                return new CreateCheckDuplicationResponse(true, Type.EMAIL, request.getEmail());
+            }
+        }
     }
 
     public List<User> findUsers(){return userRepository.findAll();}
@@ -106,41 +131,63 @@ public class UserService {
 
     @Transactional()
     public void saveProfilePics(User user, MultipartFile file){
-        if (file.getSize() > )
         String[] originalName = file.getOriginalFilename().split("\\.");
         User findUser = userRepository.findOne(user.getId());
+
+        if (findUser == null) {
+            throw new UserNotExist("해당하는 유저는 존재하지 않습니다.",ErrorCode.NOT_FOUND);
+        }
+
         String fileName = user.getId()+"_ProfilePics." + originalName[originalName.length-1];
         String profile = fileService.store(file,fileName,profileFolder);
+
         findUser.setProfilePics(profile);
         userRepository.save(findUser);
     }
 
     public Resource getProfilePics(User user){
         User findUser = userRepository.findOne(user.getId());
+        if (findUser == null) {
+            throw new UserNotExist("해당하는 유저는 존재하지 않습니다.",ErrorCode.NOT_FOUND);
+        }
+        if (findUser.getProfilePics() == null){
+            throw new ResourceNotExist("프로필 사진이 존재하지 않습니다.", ErrorCode.NOT_FOUND);
+        }
+
         return fileService.loadAsResource(findUser.getProfilePics(),profileFolder);
     }
 
     @Transactional()
     public void saveBackgroundPics(User user,MultipartFile file){
+
         String[] originalName = file.getOriginalFilename().split("\\.");
+
         User findUser = userRepository.findOne(user.getId());
+        if (findUser == null) {
+            throw new UserNotExist("해당하는 유저는 존재하지 않습니다.",ErrorCode.NOT_FOUND);
+        }
+
         String fileName = user.getId()+"_BackgroundPics." + originalName[originalName.length-1];
         String profile = fileService.store(file,fileName,backgroundFolder);
+
         findUser.setBackgroundPics(profile);
         userRepository.save(findUser);
     }
 
     public Resource getBackgroundPics(User user){
         User findUser = userRepository.findOne(user.getId());
+        if (findUser == null) {
+            throw new UserNotExist("해당하는 유저는 존재하지 않습니다.",ErrorCode.NOT_FOUND);
+        }
+
+        if (findUser.getBackgroundPics() == null){
+            throw new ResourceNotExist("배경 사진이 존재하지 않습니다.", ErrorCode.NOT_FOUND);
+        }
+
         return fileService.loadAsResource(findUser.getBackgroundPics(),backgroundFolder);
     }
 
     public User findOneWithEmail(String email) {
-        try {
-            return userRepository.findOneWithEmail(email);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        return null;
+        return userRepository.findOneWithEmail(email);
     }
 }

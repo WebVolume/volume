@@ -1,5 +1,8 @@
 package volume.exception;
 
+import lombok.Getter;
+
+@Getter
 public class PasswordNotExact extends RuntimeException{
     private ErrorCode errorCode;
 
