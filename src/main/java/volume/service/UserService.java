@@ -9,6 +9,10 @@ import org.springframework.web.multipart.MultipartFile;
 import volume.DTO.UpdateUserDTO;
 import volume.configuration.SecurityConfig;
 import volume.entity.User;
+import volume.exception.DuplicateUserIdException;
+import volume.exception.ErrorCode;
+import volume.exception.PasswordNotExact;
+import volume.exception.UserNotExist;
 import volume.repository.UserRepository;
 
 import java.io.File;
@@ -36,16 +40,16 @@ public class UserService {
         return user.getId();
     }
 
-    public void setPassword(User user, String password){
-        PasswordEncoder passwordEncoder = securityConfig.getPasswordEncoder();
-        user.setPassword(passwordEncoder.encode(password));
-    }
-
     private void validateDuplicateUser(User user){
         User findUser = findOne(user.getId());
         if (findUser != null){
-            throw new IllegalStateException("이미 존재하는 아이디입니다.");
+            throw new DuplicateUserIdException("해당하는 Id를 가진 유저가 있습니다.", ErrorCode.DUPLICATE_USER_ID);
         }
+    }
+
+    public void setPassword(User user, String password){
+        PasswordEncoder passwordEncoder = securityConfig.getPasswordEncoder();
+        user.setPassword(passwordEncoder.encode(password));
     }
 
     public List<User> findUsers(){return userRepository.findAll();}
@@ -55,11 +59,11 @@ public class UserService {
     public String login(User user){
         User findUser = userRepository.findOne(user.getId());
         if (findUser == null){
-            throw new IllegalStateException("해당하는 아이디는 존재하지 않습니다.");
+            throw new UserNotExist("해당하는 아이디를 가진 유저는 존재하지 않습니다.",ErrorCode.NOT_FOUND);
         }
 
         if (!findUser.isKakao() && !checkPassword(findUser,user.getPassword())){
-            throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
+            throw new PasswordNotExact("아이디와 비밀번호가 일치하지 않습니다.",ErrorCode.PASSWORD_NOT_EXACT);
         }
         return user.getId();
     }
@@ -74,36 +78,30 @@ public class UserService {
 
     @Transactional
     public String updateUser(UpdateUserDTO userDTO){
-        try {
-            User findUser = userRepository.findOne(userDTO.getId());
-            if (findUser == null) {
-                throw new Exception("해당하는 유저가 존재하지 않습니다.");
-            }
-
-            if (!checkPassword(findUser, userDTO.getPassword())) {
-                throw new Exception("비밀번호가 일치하지 않습니다.");
-            }
-
-            if (userDTO.getNewPassword() != null) {
-                setPassword(findUser,userDTO.getNewPassword());
-            }
-
-            if (userDTO.getUserName() != null) {
-                findUser.setUserName(userDTO.getUserName());
-            }
-
-            if (userDTO.getEmail() != null) {
-                findUser.setEmail(userDTO.getEmail());
-            }
-
-            userRepository.save(findUser);
-
-
-            return findUser.getId();
-        }catch(Exception e){
-            e.printStackTrace();
-            return e.getMessage();
+        User findUser = userRepository.findOne(userDTO.getId());
+        if (findUser == null) {
+            throw new UserNotExist("해당하는 아이디를 가진 유저는 존재하지 않습니다.",ErrorCode.NOT_FOUND);
         }
+
+        if (!checkPassword(findUser, userDTO.getPassword())) {
+            throw new PasswordNotExact("아이디와 비밀번호가 일치하지 않습니다.",ErrorCode.PASSWORD_NOT_EXACT);
+        }
+
+        if (userDTO.getNewPassword() != null) {
+            setPassword(findUser,userDTO.getNewPassword());
+        }
+
+        if (userDTO.getUserName() != null) {
+            findUser.setUserName(userDTO.getUserName());
+        }
+
+        if (userDTO.getEmail() != null) {
+            findUser.setEmail(userDTO.getEmail());
+        }
+
+        userRepository.save(findUser);
+
+        return findUser.getId();
     }
 
     @Transactional()
@@ -136,4 +134,12 @@ public class UserService {
         return fileService.loadAsResource(findUser.getBackgroundPics(),backgroundFolder);
     }
 
+    public User findOneWithEmail(String email) {
+        try {
+            return userRepository.findOneWithEmail(email);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

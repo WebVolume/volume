@@ -39,6 +39,32 @@ public class UserApiController {
         return new CreateUserResponse(id);
     }
 
+    @GetMapping("/api/signup/checkDuplication")
+    public CreateCheckIdResponse checkUserId(@RequestBody CheckUserIdRequest request){
+        if (request.getId() != null) {
+            String userId = request.getId();
+            User findUser = userService.findOne(userId);
+
+            if (findUser == null) {
+                return new CreateCheckIdResponse(false, userId);
+            } else {
+                return new CreateCheckIdResponse(true, userId);
+            }
+        }else if (request.getEmail() != null){
+            String email = request.getEmail();
+            User findUser = userService.findOneWithEmail(email);
+
+            if (findUser == null){
+                return new CreateCheckIdResponse(false, null);
+            } else {
+                return new CreateCheckIdResponse(true, findUser.getId());
+            }
+        }else{
+            //에러추가해야함!!
+            return null;
+        }
+    }
+
     @PostMapping("/api/login")
     public CreateUserResponse loginUser(@RequestBody @Valid CreateUserRequest request){
         User user = request.getUser();
@@ -124,5 +150,22 @@ public class UserApiController {
         public CreateUserResponse(String id){
             this.id = id;
         }
+    }
+
+    @Data
+    static class CreateCheckIdResponse {
+        private Boolean exist;
+        public String id;
+
+        public CreateCheckIdResponse(Boolean exist, String id){
+            this.exist = exist;
+            this.id = id;
+        }
+    }
+
+    @Data
+    static class CheckUserIdRequest {
+        private String id;
+        private String email;
     }
 }

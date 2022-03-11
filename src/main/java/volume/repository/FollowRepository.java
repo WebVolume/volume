@@ -4,7 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import volume.entity.Follow;
 import volume.entity.User;
-import volume.exception.NoExectFollow;
+import volume.exception.ErrorCode;
+import volume.exception.NoExactFollowing;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -31,13 +32,13 @@ public class FollowRepository {
         return em.createQuery("select f from Follow f where f.followerUser = :followerUser",Follow.class).setParameter("followerUser",followerUser).getResultList();
     }
 
-    public Follow findByTargetFollower(User targetUser, User followerUser){
+    public Follow findByTargetFollower(User targetUser, User followerUser) throws NoExactFollowing {
         Object result = em.createQuery("select f from Follow f where f.followerUser = :followerUser and f.targetUser = :targetUser").setParameter("followerUser",followerUser).setParameter("targetUser",targetUser).getSingleResult();
 
         if (result instanceof Follow){
             return (Follow)result;
         }else{
-            throw new NoExectFollow("해당하는 팔로잉이 없습니다");
+            throw new NoExactFollowing("해당하는 팔로잉이 없습니다", ErrorCode.NOT_FOUND);
         }
     }
 }

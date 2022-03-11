@@ -1,9 +1,9 @@
 package volume.repository;
 
 import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.stereotype.Repository;
 import volume.entity.User;
+import volume.exception.UserNotExist;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -23,8 +23,12 @@ public class UserRepository {
         return findUser;
     }
 
+
     public List<User> findAll(){
         return em.createQuery("select u from User u", User.class).getResultList();
     }
 
+    public User findOneWithEmail(String email) throws UserNotExist{
+        return (User) em.createQuery("select u From User u where u.email = :email").setParameter("email",email).getSingleResult();
+    }
 }
