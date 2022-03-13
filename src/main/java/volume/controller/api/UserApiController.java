@@ -40,7 +40,7 @@ public class UserApiController {
         return new CreateUserResponse(id);
     }
 
-    @GetMapping("/api/signup/checkDuplication")
+    @PostMapping("/api/signup/checkDuplication")
     public CreateCheckDuplicationResponse checkDuplication(@RequestBody CheckUserDuplicationRequest request){
         return userService.checkDuplication(request);
     }
