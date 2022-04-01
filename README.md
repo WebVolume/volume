@@ -2,6 +2,10 @@
 https://volume-server-api.herokuapp.com
 
 # REST API
+<details open>
+    <summary> Korean API Doucment</summary>
+
+    
 [1. 회원 가입](#회원-가입)
 
 [1-1. 중복 확인](#중복-확인)
@@ -90,7 +94,7 @@ https://volume-server-api.herokuapp.com
 ### Response
 ```javascript
 {
-    "exist": false,     //true (이미 해당 이메일이 사용중), false (해당 이메일이 사용중이지 않음 => 사용할 수 있음)
+    "exist": false,     //true (이미 해당 아이디가 사용중), false (해당 아이디가 사용중이지 않음 => 사용할 수 있음)
     "type": "ID",       //아이디 중복 확인 요청했음
     "id": "tester12",   //중복 확인 된 아이디
     "email": null       //아이디 중복 확인 요청 시, 이메일는 넘어온게 없으므로 null
@@ -231,3 +235,238 @@ https://volume-server-api.herokuapp.com
 ```
 
 </br>
+
+</details>
+
+<details open>
+    <summary> English API Document </summary>
+    
+   
+[1. Sign up](#sign-up)
+
+[1-1. Check Duplication](#check-duplication)
+
+[2. Login](#login)
+
+[3. Upload Profile Picture](#upload-profile-picture)
+
+[4. Get Profile Picture](#get-profile-picture)
+
+[5. Upload Background Picture](#upload-background-picture)
+
+[6. Get Background Picture](#get-background-picture)
+
+[7. Modify User Information](#modify-user-information)
+
+***
+***
+</br>
+
+# Sign Up
+
+* **URL** : "/api/signup"
+
+* **Method** : POST
+
+### Request
+```javascript
+{   "id" : "testerid",
+    "password" : "testpassword",
+    "userName" : "tester",
+    "email" : "test@volume.co.kr",
+    "kakao" : false}
+```
+- Login with Kakao : The value of kakao is true and password is not required
+- General Login : The value of kakao is false or not used, and the password is required.
+
+### Response
+```javascript
+{   "id" : "testerid"}
+```
+</br>
+
+***
+</br>
+
+# Check Duplication
+
+* **URL** : "/api/signup/checkDuplication"
+
+* **Method** : POST
+
+<br>
+
+<h2>Check Email Duplication</h2>
+
+### Request
+```javascript
+{
+    "email" : "test"
+}
+```
+- If you check the email duplicate, just send the email to the body.
+
+### Response
+```javascript
+{
+    "exist": false,     //true (This email is already occupied), false (This email is not in use => Able to use this email)
+    "type": "EMAIL",    //Request for duplicate email verification
+    "id": null,         //When requesting duplicate email verification, the ID has not been crossed, so null
+    "email": "test"     //Duplicate confirmed e-mail
+}
+```
+
+</br>
+<h2>Check Id Duplication</h2>
+
+### Request
+```javascript
+{
+    "id" : "tester12"
+}
+```
+- When confirming the duplication of the id, only the id is handed over to the body.
+
+### Response
+```javascript
+{
+    "exist": false,     //true (This Id is alredy occupied), false (This id is not in use => Able to use this id)
+    "type": "ID",       //Request for duplicate ID verification
+    "id": "tester12",   //Duplicate identification ID.
+    "email": null       //When requesting duplicate ID verification, the email has not been crossed, so null
+}
+```
+
+</br>
+
+***
+</br>
+
+# Login
+
+* **URL** : "/api/login"
+
+* **Method** : POST
+
+### Request
+```javascript
+{   "id" : "testerid",
+    "password" : "testpassword"}
+```
+
+### Response
+```javascript
+{   "id" : "testerid"}
+```
+
+</br>
+
+***
+</br>
+
+# Upload Profile Picture
+
+* **URL** : "/api/uploadProfilePic"
+
+* **Method** : POST
+
+### Request
+```javascript
+{   "id" : "testerid",
+    "profilePic" : file }
+```
+
+### Response
+```javascript
+{   "id" : "testerid"}
+```
+</br>
+
+***
+</br>
+
+# Get Profile Picture
+
+* **URL** : "/api/getProfilePic"
+
+* **Method** : GET
+
+### Request
+```javascript
+{   "id" : "testerid" }
+```
+
+### Response
+file
+
+</br>
+
+***
+</br>
+
+# Upload Background Picture
+
+* **URL** : "/api/uploadBackgroundPics"
+
+* **Method** : POST
+
+### Request
+```javascript
+{   "id" : "testerid",
+    "profilePic" : file }
+```
+
+### Response
+```javascript
+{   "id" : "testerid"}
+```
+
+</br>
+
+***
+</br>
+
+# Get Background Picture
+
+* **URL** : "/api/getBackgroundPics"
+
+* **Method** : GET
+
+### Request
+```javascript
+{   "id" : "testerid" }
+```
+
+### Response
+file
+
+</br>
+
+***
+
+</br>
+
+# Modify User Information
+
+* **URL** : "/api/updateUser"
+
+* **Method** : PATCH
+
+### Request
+```javascript
+{
+    "id" : "tester1",
+    "password" : "password1",
+    "newPassword" : "1234",
+    "userName" : "TestUpdate",
+    "email" : "update@email.com"
+}
+```
+
+### Response
+```javascript
+{   "id" : "testerid"}
+```
+
+</br>
+</details>
