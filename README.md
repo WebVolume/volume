@@ -2,7 +2,7 @@
 https://volume-server-api.herokuapp.com
 
 # REST API
-<details open>
+<details close>
     <summary> Korean API Doucment</summary>
 
     
@@ -238,7 +238,7 @@ https://volume-server-api.herokuapp.com
 
 </details>
 
-<details open>
+<details close>
     <summary> English API Document </summary>
     
    
