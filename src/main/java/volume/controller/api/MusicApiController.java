@@ -28,16 +28,10 @@ public class MusicApiController {
 
         private String title;
         private String userId;
-        private long likeCount;
-        private long playCount;
-        private long musicLength;
         private MultipartFile musicFilePath;
 
         public Music getMusic(){
             Music music = new Music();
-            music.setMusicLength(musicLength);
-            music.setPlayCount(playCount);
-            music.setLikeCount(likeCount);
             music.setTitle(title);
             return music;
         }
