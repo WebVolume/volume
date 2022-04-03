@@ -22,6 +22,8 @@ https://volume-server-api.herokuapp.com
 
 [7. 회원 정보 수정](#회원-정보-수정)
 
+[8. 음악 업로드](#음악-업로드)
+
 ***
 ***
 </br>
@@ -236,6 +238,36 @@ https://volume-server-api.herokuapp.com
 
 </br>
 
+***
+
+</br>
+
+# 음악 업로드
+
+* **URL** : "/api/uploadMusic
+
+* **Method** : POST
+
+### Request
+```javascript
+{   
+    "userId" : "testerId",
+    "title" : "testMusic",
+    "musicFilePath" : 파일 
+}
+```
+
+### Response
+```javascript
+{   
+    "id" : "testMusicId",
+    "title" : "testMusicTitle" 
+}
+```
+</br>
+
+***
+
 </details>
 
 <details close>
@@ -257,6 +289,8 @@ https://volume-server-api.herokuapp.com
 [6. Get Background Picture](#get-background-picture)
 
 [7. Modify User Information](#modify-user-information)
+
+[8. Upload Music](#upload-music)
 
 ***
 ***
@@ -469,4 +503,34 @@ file
 ```
 
 </br>
+
+***
+
+</br>
+
+# Upload Music
+
+* **URL** : "/api/uploadMusic
+
+* **Method** : POST
+
+### Request
+```javascript
+{   
+    "userId" : "testerId",
+    "title" : "testMusic",
+    "musicFilePath" : file
+}
+```
+
+### Response
+```javascript
+{   
+    "id" : "testMusicId",
+    "title" : "testMusicTitle" 
+}
+```
+</br>
+
+***
 </details>
