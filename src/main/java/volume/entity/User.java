@@ -23,4 +23,6 @@ public class User{
     private String backgroundPics;
     private int age;
     private boolean kakao = false;
+    private boolean google = false;
+
 }

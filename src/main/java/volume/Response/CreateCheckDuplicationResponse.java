@@ -6,8 +6,11 @@ import lombok.Data;
 public class CreateCheckDuplicationResponse {
     private Boolean exist;
     private Type type;
-    public String id;
-    public String email;
+    private String id;
+    private String email;
+    private boolean kakao = false;
+    private boolean google = false;
+
 
     public CreateCheckDuplicationResponse(Boolean exist, Type type, String string){
         this.exist = exist;
@@ -17,5 +20,11 @@ public class CreateCheckDuplicationResponse {
         }else{
             this.id = string;
         }
+    }
+
+    public CreateCheckDuplicationResponse(Boolean exist, Type type, String string, boolean kakao, boolean google){
+        this(exist,type,string);
+        this.kakao = kakao;
+        this.google = google;
     }
 }

@@ -30,10 +30,8 @@ public class UserApiController {
 
     @PostMapping("/api/signup")
     public CreateUserResponse saveUser(@RequestBody @Valid CreateUserRequest request){
-        PasswordEncoder passwordEncoder = securityConfig.getPasswordEncoder();
 
         User user = request.getUser();
-        System.out.println("Encoded Password : " + user.getPassword());
 
         String id = userService.signUp(user);
 
@@ -103,6 +101,7 @@ public class UserApiController {
         private String password;
         private String email;
         private boolean kakao = false;
+        private boolean google = false;
         private MultipartFile profilePic;
         private MultipartFile backgroundPics;
 
@@ -113,6 +112,7 @@ public class UserApiController {
             user.setPassword(getPassword());
             user.setEmail(getEmail());
             user.setKakao(isKakao());
+            user.setGoogle(isGoogle());
             return user;
         }
     }

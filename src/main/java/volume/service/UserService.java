@@ -36,7 +36,7 @@ public class UserService {
     @Transactional
     public String signUp(User user){
         validateDuplicateUser(user);
-        if (!user.isKakao()) {
+        if (!user.isKakao() && !user.isGoogle()) {
             setPassword(user, user.getPassword());
         }
         userRepository.save(user);
@@ -70,9 +70,9 @@ public class UserService {
             User findUser = findOneWithEmail(email);
 
             if (findUser == null) {
-                return new CreateCheckDuplicationResponse(false, Type.EMAIL, request.getEmail());
+                return new CreateCheckDuplicationResponse(false, Type.EMAIL, request.getEmail(),false,false);
             } else {
-                return new CreateCheckDuplicationResponse(true, Type.EMAIL, request.getEmail());
+                return new CreateCheckDuplicationResponse(true, Type.EMAIL, request.getEmail(), findUser.isKakao(), findUser.isGoogle());
             }
         }
     }
